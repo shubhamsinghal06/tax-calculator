@@ -17,7 +17,7 @@ It compares tax liability under **Old Regime** and **New Regime** (as per Indian
 
 ## Live Demo
 View it here (via GitHub Pages):  
-👉 https://yourusername.github.io/repo-name/
+👉 https://shubhamsinghal06.github.io/tax-calculator/
 
 ## Tech Stack
 - HTML for structure
