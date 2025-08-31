@@ -7,14 +7,29 @@
   <style>
     body { font-family: Arial, sans-serif; margin: 30px; background: #f9f9f9; }
     h2 { color: #333; text-align: center; }
-    .container { max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .container { max-width: 700px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
     label { display: block; margin: 10px 0 5px; }
     input { width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; }
     button { padding: 8px 12px; border: none; border-radius: 5px; background: #007bff; color: #fff; cursor: pointer; }
     button:hover { background: #0056b3; }
-    .results-container { display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap; }
-    .result { flex: 1; min-width: 250px; padding: 15px; background: #f1f1f1; border-radius: 5px; }
-    .result h3 { margin-top: 0; text-align: center; }
+    
+    .results-container { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+      gap: 15px; 
+      margin-top: 20px; 
+    }
+    
+    .result { 
+      padding: 15px; 
+      background: #f1f1f1; 
+      border-radius: 5px; 
+    }
+    
+    .result h3 { 
+      margin-top: 0; 
+      text-align: center; 
+    }
   </style>
 </head>
 <body>
@@ -28,7 +43,6 @@
   </div>
 
   <script>
-    // Function to format numbers in Indian style (lakhs, crores)
     function formatIndianNumber(x) {
       if (!x) return "";
       x = x.toString().replace(/,/g, "");
@@ -38,7 +52,6 @@
       return otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
     }
 
-    // Update input field with commas as user types
     document.getElementById("income").addEventListener("input", function (e) {
       let value = e.target.value.replace(/,/g, "");
       if (!isNaN(value) && value !== "") {
@@ -59,7 +72,6 @@
       else if (income <= 500000) tax = (income - 250000) * 0.05;
       else if (income <= 1000000) tax = 12500 + (income - 500000) * 0.20;
       else tax = 112500 + (income - 1000000) * 0.30;
-
       return Math.round(tax * 1.04);
     }
 
@@ -71,7 +83,6 @@
       else if (income <= 1200000) tax = 50000 + (income - 1000000) * 0.15;
       else if (income <= 1500000) tax = 80000 + (income - 1200000) * 0.20;
       else tax = 140000 + (income - 1500000) * 0.30;
-
       return Math.round(tax * 1.04);
     }
 
