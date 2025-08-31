@@ -9,11 +9,11 @@
     h2 { color: #333; text-align: center; }
     .container { max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
     label { display: block; margin: 10px 0 5px; }
-    input { width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px; }
+    input { width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; }
     button { padding: 8px 12px; border: none; border-radius: 5px; background: #007bff; color: #fff; cursor: pointer; }
     button:hover { background: #0056b3; }
-    .results-container { display: flex; gap: 15px; margin-top: 20px; }
-    .result { flex: 1; padding: 15px; background: #f1f1f1; border-radius: 5px; }
+    .results-container { display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap; }
+    .result { flex: 1; min-width: 250px; padding: 15px; background: #f1f1f1; border-radius: 5px; }
     .result h3 { margin-top: 0; text-align: center; }
   </style>
 </head>
@@ -21,13 +21,38 @@
   <div class="container">
     <h2>Income Tax Calculator</h2>
     <label for="income">Enter Taxable Income:</label>
-    <input type="number" id="income" placeholder="e.g. 1200000">
+    <input type="tel" id="income" placeholder="e.g. 12,00,000" inputmode="numeric">
     <button onclick="calculateTax()">Calculate</button>
 
     <div class="results-container" id="results"></div>
   </div>
 
   <script>
+    // Function to format numbers in Indian style (lakhs, crores)
+    function formatIndianNumber(x) {
+      if (!x) return "";
+      x = x.toString().replace(/,/g, "");
+      let lastThree = x.substring(x.length - 3);
+      let otherNumbers = x.substring(0, x.length - 3);
+      if (otherNumbers !== "") lastThree = "," + lastThree;
+      return otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
+    }
+
+    // Update input field with commas as user types
+    document.getElementById("income").addEventListener("input", function (e) {
+      let value = e.target.value.replace(/,/g, "");
+      if (!isNaN(value) && value !== "") {
+        e.target.value = formatIndianNumber(value);
+      } else {
+        e.target.value = "";
+      }
+    });
+
+    function getRawIncome() {
+      let raw = document.getElementById("income").value.replace(/,/g, "");
+      return parseInt(raw) || 0;
+    }
+
     function calculateOldRegime(income) {
       let tax = 0;
       if (income <= 250000) tax = 0;
@@ -35,7 +60,7 @@
       else if (income <= 1000000) tax = 12500 + (income - 500000) * 0.20;
       else tax = 112500 + (income - 1000000) * 0.30;
 
-      return Math.round(tax * 1.04); // incl cess
+      return Math.round(tax * 1.04);
     }
 
     function calculateNewRegime(income) {
@@ -47,11 +72,11 @@
       else if (income <= 1500000) tax = 80000 + (income - 1200000) * 0.20;
       else tax = 140000 + (income - 1500000) * 0.30;
 
-      return Math.round(tax * 1.04); // incl cess
+      return Math.round(tax * 1.04);
     }
 
     function calculateTax() {
-      const income = parseInt(document.getElementById("income").value) || 0;
+      const income = getRawIncome();
 
       const oldTax = calculateOldRegime(income);
       const newTax = calculateNewRegime(income);
@@ -65,15 +90,15 @@
       document.getElementById("results").innerHTML = `
         <div class="result">
           <h3>Old Regime</h3>
-          <p><b>Tax:</b> ₹${oldTax.toLocaleString()}</p>
-          <p><b>Salary after Tax:</b> ₹${salaryAfterOld.toLocaleString()}</p>
-          <p><b>Per Month:</b> ₹${perMonthOld.toLocaleString()}</p>
+          <p><b>Tax:</b> ₹${formatIndianNumber(oldTax)}</p>
+          <p><b>Salary after Tax:</b> ₹${formatIndianNumber(salaryAfterOld)}</p>
+          <p><b>Per Month:</b> ₹${formatIndianNumber(perMonthOld)}</p>
         </div>
         <div class="result">
           <h3>New Regime</h3>
-          <p><b>Tax:</b> ₹${newTax.toLocaleString()}</p>
-          <p><b>Salary after Tax:</b> ₹${salaryAfterNew.toLocaleString()}</p>
-          <p><b>Per Month:</b> ₹${perMonthNew.toLocaleString()}</p>
+          <p><b>Tax:</b> ₹${formatIndianNumber(newTax)}</p>
+          <p><b>Salary after Tax:</b> ₹${formatIndianNumber(salaryAfterNew)}</p>
+          <p><b>Per Month:</b> ₹${formatIndianNumber(perMonthNew)}</p>
         </div>
       `;
     }
