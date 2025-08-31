@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Income Tax Calculator (Old vs New Regime)</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; background: #f9f9f9; }
+    h2 { color: #333; }
+    .container { max-width: 400px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    label { display: block; margin: 10px 0 5px; }
+    input { width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px; }
+    .result { margin-top: 15px; padding: 10px; background: #f1f1f1; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Income Tax Calculator</h2>
+    <label for="income">Enter Taxable Income:</label>
+    <input type="number" id="income" placeholder="e.g. 1200000">
+    <button onclick="calculateTax()">Calculate</button>
+
+    <div class="result" id="results"></div>
+  </div>
+
+  <script>
+    function calculateOldRegime(income) {
+      let tax = 0;
+      if (income <= 250000) tax = 0;
+      else if (income <= 500000) tax = (income - 250000) * 0.05;
+      else if (income <= 1000000) tax = 12500 + (income - 500000) * 0.20;
+      else tax = 112500 + (income - 1000000) * 0.30;
+
+      tax = Math.round(tax * 1.04); // incl cess
+      return tax;
+    }
+
+    function calculateNewRegime(income) {
+      let tax = 0;
+      if (income <= 300000) tax = 0;
+      else if (income <= 700000) tax = (income - 300000) * 0.05;
+      else if (income <= 1000000) tax = 20000 + (income - 700000) * 0.10;
+      else if (income <= 1200000) tax = 50000 + (income - 1000000) * 0.15;
+      else if (income <= 1500000) tax = 80000 + (income - 1200000) * 0.20;
+      else tax = 140000 + (income - 1500000) * 0.30;
+
+      tax = Math.round(tax * 1.04); // incl cess
+      return tax;
+    }
+
+    function calculateTax() {
+      const income = parseInt(document.getElementById("income").value) || 0;
+
+      const oldTax = calculateOldRegime(income);
+      const newTax = calculateNewRegime(income);
+
+      const salaryAfterOld = income - oldTax;
+      const salaryAfterNew = income - newTax;
+
+      const perMonthOld = Math.round(salaryAfterOld / 12);
+      const perMonthNew = Math.round(salaryAfterNew / 12);
+
+      document.getElementById("results").innerHTML = `
+        <p><b>Tax (Old Regime):</b> ₹${oldTax.toLocaleString()}</p>
+        <p><b>Salary after Old Regime Tax:</b> ₹${salaryAfterOld.toLocaleString()}</p>
+        <p><b>Per Month (Old Regime):</b> ₹${perMonthOld.toLocaleString()}</p>
+        <hr>
+        <p><b>Tax (New Regime):</b> ₹${newTax.toLocaleString()}</p>
+        <p><b>Salary after New Regime Tax:</b> ₹${salaryAfterNew.toLocaleString()}</p>
+        <p><b>Per Month (New Regime):</b> ₹${perMonthNew.toLocaleString()}</p>
+      `;
+    }
+  </script>
+</body>
+</html>
