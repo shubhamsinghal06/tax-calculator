@@ -6,11 +6,15 @@
   <title>Income Tax Calculator (Old vs New Regime)</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 30px; background: #f9f9f9; }
-    h2 { color: #333; }
-    .container { max-width: 400px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    h2 { color: #333; text-align: center; }
+    .container { max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
     label { display: block; margin: 10px 0 5px; }
     input { width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px; }
-    .result { margin-top: 15px; padding: 10px; background: #f1f1f1; border-radius: 5px; }
+    button { padding: 8px 12px; border: none; border-radius: 5px; background: #007bff; color: #fff; cursor: pointer; }
+    button:hover { background: #0056b3; }
+    .results-container { display: flex; gap: 15px; margin-top: 20px; }
+    .result { flex: 1; padding: 15px; background: #f1f1f1; border-radius: 5px; }
+    .result h3 { margin-top: 0; text-align: center; }
   </style>
 </head>
 <body>
@@ -20,7 +24,7 @@
     <input type="number" id="income" placeholder="e.g. 1200000">
     <button onclick="calculateTax()">Calculate</button>
 
-    <div class="result" id="results"></div>
+    <div class="results-container" id="results"></div>
   </div>
 
   <script>
@@ -31,8 +35,7 @@
       else if (income <= 1000000) tax = 12500 + (income - 500000) * 0.20;
       else tax = 112500 + (income - 1000000) * 0.30;
 
-      tax = Math.round(tax * 1.04); // incl cess
-      return tax;
+      return Math.round(tax * 1.04); // incl cess
     }
 
     function calculateNewRegime(income) {
@@ -44,8 +47,7 @@
       else if (income <= 1500000) tax = 80000 + (income - 1200000) * 0.20;
       else tax = 140000 + (income - 1500000) * 0.30;
 
-      tax = Math.round(tax * 1.04); // incl cess
-      return tax;
+      return Math.round(tax * 1.04); // incl cess
     }
 
     function calculateTax() {
@@ -61,13 +63,18 @@
       const perMonthNew = Math.round(salaryAfterNew / 12);
 
       document.getElementById("results").innerHTML = `
-        <p><b>Tax (Old Regime):</b> ₹${oldTax.toLocaleString()}</p>
-        <p><b>Salary after Old Regime Tax:</b> ₹${salaryAfterOld.toLocaleString()}</p>
-        <p><b>Per Month (Old Regime):</b> ₹${perMonthOld.toLocaleString()}</p>
-        <hr>
-        <p><b>Tax (New Regime):</b> ₹${newTax.toLocaleString()}</p>
-        <p><b>Salary after New Regime Tax:</b> ₹${salaryAfterNew.toLocaleString()}</p>
-        <p><b>Per Month (New Regime):</b> ₹${perMonthNew.toLocaleString()}</p>
+        <div class="result">
+          <h3>Old Regime</h3>
+          <p><b>Tax:</b> ₹${oldTax.toLocaleString()}</p>
+          <p><b>Salary after Tax:</b> ₹${salaryAfterOld.toLocaleString()}</p>
+          <p><b>Per Month:</b> ₹${perMonthOld.toLocaleString()}</p>
+        </div>
+        <div class="result">
+          <h3>New Regime</h3>
+          <p><b>Tax:</b> ₹${newTax.toLocaleString()}</p>
+          <p><b>Salary after Tax:</b> ₹${salaryAfterNew.toLocaleString()}</p>
+          <p><b>Per Month:</b> ₹${perMonthNew.toLocaleString()}</p>
+        </div>
       `;
     }
   </script>
